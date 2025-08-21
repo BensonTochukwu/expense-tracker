@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Yearwise Expense Report</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Yearwise Expense Report</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <!-- Display messages (errors/success) -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Date Filtering Form -->
+                <form method="get" action="">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="year" style="color: blue;font-weight: bolder;font-size: larger;">Year:</label>
+                        <select name="year" id="year" class="form-control">
+                            <option value="">Select a year</option>
+                            {% for year in years_range %}
+                                <option value="{{ year }}" {% if year|stringformat:'s' == selected_year %}selected{% endif %}>{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </form>
+
+                <!-- Conditionally render the table and date range message only if date filtering has been applied -->
+                {% if selected_year %}
+                    <h5 class="text-info mt-4">Report of Year: {{selected_year}}</h5>
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                             
+                                <th>Total Amount</th>
+                               
+                              </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Year</th>
+                           
+                                <th>Amount</th>
+                               
+                              </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for record in data1 %}
+                            <tr>
+                                <td>{{ record.year }}</td>
+                                <td>{{ record.total_cost }}</td>
+                            </tr>
+        {% endfor %}
+                        </tbody>
+                        <h5 class="text-info">Total Amount: {{ total_amount1 }}</h5>
+                    </table>
+                    
+           
+            </div>{% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
